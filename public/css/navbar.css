@@ -1,0 +1,47 @@
+nav{
+    background-color: aliceblue;
+    top: 0;
+    right: 0;
+    left: 0;
+    border-bottom: 2px solid aquamarine;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    z-index: 9999;
+    height: 60px;
+}
+
+.left img{
+    width: 120px;
+    height: 80px;
+}
+
+.right{
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.right a{
+    font-family: 'poppins';
+    font-size: 14px;
+    margin: 20px;
+    text-decoration: none;
+    color: rgb(33, 192, 240);
+}
+
+.right .login{
+    background-color: rgb(33, 192, 240);
+    color: white;
+    width: 80px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.right .login:hover{
+    background-color: aquamarine;
+}
