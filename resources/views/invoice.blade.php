@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice</title>
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
-    <link rel="stylesheet" href="{{ asset('css/keranjang.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/invoice.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
 <body style="font-family: 'poppins'">
@@ -28,70 +28,50 @@
                     <p style="color: red;">{{ $message }}</p>
                 @enderror
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-            <!-- <button type="submit" id="submit-all-btn" class="btn btn-primary">Next</button> -->
+        @forelse ($categories as $c)
+            <!-- @forelse($products as $key => $p)
+            @if($c->id != $p->CategoryId || $keranjang[$key]->Status === 'done')
+                @continue
+            @endif            
+            <h1 style="font-size: 24px; color: rgb(33, 192, 240)">{{ $c->Nama }} |</h1>
+            <br>
+            @empty
+                <p>{{ "No Products Added." }}</p>
+            @endforelse -->
+            @if($categoryStat[$c->id] === false)
+                    @continue
+            @endif     
+            <h1 style="font-size: 24px; color: rgb(33, 192, 240)">{{ $c->Nama }} |</h1>
+            <br> 
         <div class="item">
             @forelse($products as $key => $p)
-            @if($keranjang[$key]->Status != 'done')
+            @if($c->id != $p->CategoryId)
+                @continue
+            @endif
+            @if($keranjang[$key]->Status != 'done' && $keranjang[$key]->UserId == Auth::user()->id)
             <div class="card">
                 <img src="{{ asset('storage/'.$p->Photo) }}" alt="{{ $p->Photo }}">
+                <!-- <h2>Category: {{ $p->category->Nama }} </h2> -->
                 <h2>Nama: {{ $p->Nama }}</h2>
                 <h2>Harga: Rp. {{ $p->Harga }}</h2>
-                <div class="mb-3">
-                <form action="/update-jumlah/{{ $keranjang[$key]->id }}" method="POST">
-                @csrf
-                @method('patch')
-                <label for="Jumlah" class="form-label"><h2>Jumlah</h2></label>
-                <input type="number" class="form-control" id="Jumlah" aria-describedby="emailHelp" name="Jumlah" value="{{ old('Jumlah') }}">
-                @error('Jumlah')
-                    <p style="color: red;">{{ $message }}</p>
-                @enderror
-                <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-                </div>
+                <h2>Jumlah: {{ $keranjang[$key]->Jumlah }}</h2>
+                <h2>Subtotal: {{ $keranjang[$key]->Subtotal }}</h2>
             </div>
             @endif
             @empty
                 <p>{{ "No Products Added." }}</p>
             @endforelse
         </div>
-        <!-- <button type="submit" id="submit-all-btn" class="btn btn-primary">Next</button> -->
+        @empty
+        <p>{{ "No Categories Added." }}</p>
+        @endforelse
+        <hr>
+        <h2 style="font-size: 24px; color: rgb(33, 192, 240)">Total: Rp. {{ $total }}</h2>
+        <br>
+        <button type="submit" class="btn btn-primary">Next</button>
+    </form>
     </div>
     
-    <!-- <script>    
-    // console.log("click");
-    document.getElementById('submit-all-btn').addEventListener('click', function() {
-        event.preventDefault();
-
-        var alamatValue = document.getElementById('Alamat').value.trim();
-        var kodePosValue = document.getElementById('KodePos').value.trim();
-
-        var jumlahInputs = document.querySelectorAll('input[name="Jumlah"]');
-        var jumlahFill = true;
-
-        for (var i = 0; i < jumlahInputs.length; i++) {
-            if (jumlahInputs[i].value.trim() == 0) {
-                // alert('Please enter a value.');
-                jumlahFill = false;
-                break;
-            }
-        }
-        // console.log("p");
-        if (alamatValue.length < 10 || kodePosValue.length != 5 || jumlahFill == false){
-            // alert('Please fill in the Alamat and Kode Pos fields.');
-            return;
-        }
-        
-        var updateForms = document.querySelectorAll('form[action^="/update-jumlah/"]');
-        updateForms.forEach(function(form) {
-            form.submit();
-        });
-
-        document.getElementById('invoice-form').submit();
-        
-    });
-    </script> -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 </html>

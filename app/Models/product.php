@@ -16,4 +16,9 @@ class product extends Model
         'Jumlah',
         'Photo'
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'CategoryId');
+    }
 }

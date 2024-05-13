@@ -2,20 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Keranjang;
 use App\Models\product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class KeranjangController extends Controller
 {
 
     public function editKeranjang($id){
-        Keranjang::create([
-            'ProductId'=>$id,
-            'Status'=>"Belum Checkout",
-            'Jumlah'=>0,
-            'Subtotal'=>0
-        ]);
+
+        $productx = product::find($id);
+        $already = false;
+        $keranjang = Keranjang::all();
+
+        foreach($keranjang as $k){
+            if($k->ProductId == $productx->id && $k->Status != 'done' && $k->UserId == Auth::user()->id){
+                $already = true;
+            }
+        }
+
+        if($already == false){
+            Keranjang::create([
+                'UserId'=>Auth::user()->id,
+                'ProductId'=>$id,
+                'Status'=>"Belum Checkout",
+                'Jumlah'=>1,
+                'Subtotal'=>$productx->Harga
+            ]);
+        }
 
         return redirect('/');
     }    
@@ -23,9 +39,10 @@ class KeranjangController extends Controller
         $keranjang = Keranjang::all();
         $products = [];
         $checkout = true;
+        $categories = Category::all();
 
         foreach($keranjang as $k){
-            if($k->Status != 'done'){
+            if($k->Status != 'done' && $k->UserId == Auth::user()->id){
                 $checkout = false;
                 break;
             }
@@ -39,7 +56,19 @@ class KeranjangController extends Controller
             }
         }
 
-        return view('keranjang', compact('checkout','keranjang','products'));
+        $categoryStat = [];
+        foreach ($categories as $category) {
+            $categoryStat[$category->id] = false;
+        }
+    
+        foreach ($keranjang as $k) {
+            $productx = product::find($k->ProductId);
+            if($k->Status !== 'done' && $k->UserId == Auth::user()->id){
+                $categoryStat[$productx->CategoryId] = true;
+            }
+        }
+
+        return view('keranjang', compact('checkout','keranjang','products','categories','categoryStat'));
     }
 
 }

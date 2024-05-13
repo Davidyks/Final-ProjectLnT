@@ -23,7 +23,7 @@
     width: 28%;
     padding-bottom: 20px;
     /* margin-left: 20px; */
-    margin-right: 20px;
+    margin-right: 60px;
     margin-bottom: 20px;
 }
 
@@ -35,7 +35,7 @@
 .card h2{
     font-size: 18px;
     padding-left: 20px;
-    padding-right: 20px;
+    /* padding-right: 20px; */
     color: rgb(33, 192, 240);
     overflow: scroll;
     height: 26px;

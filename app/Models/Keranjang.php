@@ -10,6 +10,7 @@ class Keranjang extends Model
     use HasFactory;
 
     protected $fillable = [
+        'UserId',
         'ProductId',
         'Status',
         'Jumlah',

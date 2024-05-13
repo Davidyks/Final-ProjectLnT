@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('keranjangs', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('UserId')->references('id')->on('users');
             $table->foreignId('ProductId')->references('id')->on('products');
             $table->string('Status');
             $table->integer('Jumlah');

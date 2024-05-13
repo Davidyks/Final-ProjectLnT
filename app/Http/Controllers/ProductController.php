@@ -11,6 +11,7 @@ class ProductController extends Controller
 {
     function createProduct(){
         $categories = Category::all();
+        
         return view('addProduct', compact('categories'));
     }
 
@@ -22,8 +23,9 @@ class ProductController extends Controller
             'Jumlah'=>['required','numeric'],
             'Photo'=>['required','image']
         ]);
-
-        $filename = $request->file('Photo')->getClientOriginalName();
+        
+        $now = now()->format('Y-m-d_H.i.s');
+        $filename = $now.'_'.$request->file('Photo')->getClientOriginalName();
         $request->file('Photo')->storeAs('/public'.'/'.$filename);
 
         product::create([
@@ -40,7 +42,17 @@ class ProductController extends Controller
     public function viewProduct(){
         $products = product::all();
         $categories = Category::all();
-        return view('home', compact('products', 'categories'));
+
+        $categoryStat = [];
+        foreach ($categories as $category) {
+            $categoryStat[$category->id] = false;
+        }
+    
+        foreach ($products as $product) {
+            $categoryStat[$product->CategoryId] = true;
+        }
+
+        return view('home', compact('products', 'categories', 'categoryStat'));
     }
 
     public function editProduct($id){
@@ -58,7 +70,9 @@ class ProductController extends Controller
             'Photo'=>['required','image']
         ]);
 
-        $filename = $request->file('Photo')->getClientOriginalName();
+        Storage::delete('/public'.'/'.product::find($id)->Photo);
+        $now = now()->format('Y-m-d_H.i.s');
+        $filename = $now.'_'.$request->file('Photo')->getClientOriginalName();
         $request->file('Photo')->storeAs('/public'.'/'.$filename);
 
         product::find($id)->update([

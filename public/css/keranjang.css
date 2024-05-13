@@ -17,7 +17,7 @@
     width: 28%;
     padding-bottom: 20px;
     /* margin-left: 20px; */
-    margin-right: 20px;
+    margin-right: 60px;
     margin-bottom: 20px;
 }
 
@@ -54,4 +54,14 @@
 .product h1{
     font-size: 24px;
     color: rgb(33, 192, 240);
+}
+
+.tombol1{
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.tombol1 button{
+    margin-left: 20px;
 }
